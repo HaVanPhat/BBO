@@ -105,16 +105,28 @@ class Ecosystem
             cout << "di cư: "<<count<<", ";
         }
 
-        vector<double> GenerateSymmetricProbabilities() {
+        vector<double> GenerateSymmetricProbabilities()
+        {
             vector<double> P(habitatCount);
-            int mid = habitatCount / 2;
-            for (int i = 0; i < habitatCount; i++)
-                P[i] = 1.0 - abs(i - mid) / (double)mid;
+            vector<double> v(habitatCount);
+            double sumv = 0;
 
-            double sum = 0;
-            for (double x : P) sum += x;
-            for (double& x : P) x /= sum;
+            for (int i = 0; i < habitatCount; i++)
+            {
+                v[i] = factorial(habitatCount - 1) / (factorial(i) * factorial(habitatCount - 1 - i));
+                sumv += v[i];
+            }
+            for (int i = 0; i < habitatCount; i++)
+                P[i] = v[i] / sumv;
             return P;
+        }
+
+        double factorial(int n)
+        {
+            double result = 1;
+            for (int i = 2; i <= n; ++i)
+                result *= i;
+            return result;
         }
 
         void Mutation() {
@@ -156,7 +168,7 @@ class Ecosystem
                     TransformPopulation();
                     cout<< "HSI tốt nhất: " <<habitats[0].HSI<<endl;
                 }
-            cout << "Giải pháp tốt nhất: "; for (int x : habitats[0].SIV) cout << x << " ";
+            cout << "Giải pháp tốt nhất: "; for (int x : habitats[0].SIV) cout << x;
             cout << "\nHSI tốt nhất = " << habitats[0].HSI << endl;
         }
 };
